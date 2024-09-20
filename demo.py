@@ -17,6 +17,8 @@ if __name__ == "__main__":
   # ======================================================================================================== #
   print("Estimating voxel volume bounds...")
   n_imgs = 1000
+  import ipdb; ipdb.set_trace()
+  # (3*3) numpy array
   cam_intr = np.loadtxt("data/camera-intrinsics.txt", delimiter=' ')
   vol_bnds = np.zeros((3,2))
   for i in range(n_imgs):
@@ -24,6 +26,7 @@ if __name__ == "__main__":
     depth_im = cv2.imread("data/frame-%06d.depth.png"%(i),-1).astype(float)
     depth_im /= 1000.  # depth is saved in 16-bit PNG in millimeters
     depth_im[depth_im == 65.535] = 0  # set invalid depth to 0 (specific to 7-scenes dataset)
+    # (4*4) rigid transformation matrix
     cam_pose = np.loadtxt("data/frame-%06d.pose.txt"%(i))  # 4x4 rigid transformation matrix
 
     # Compute camera view frustum and extend convex hull

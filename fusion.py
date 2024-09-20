@@ -137,7 +137,9 @@ class TSDFVolume:
           new_g = fmin(roundf((old_g*w_old+obs_weight*new_g)/w_new),255.0f);
           new_r = fmin(roundf((old_r*w_old+obs_weight*new_r)/w_new),255.0f);
           color_vol[voxel_idx] = new_b*256*256+new_g*256+new_r;
-        }""")
+        }""", options=["--gpu-architecture=sm_86"])
+      
+      
 
       self._cuda_integrate = self._cuda_src_mod.get_function("integrate")
 
@@ -304,7 +306,7 @@ class TSDFVolume:
     tsdf_vol, color_vol = self.get_volume()
 
     # Marching cubes
-    verts = measure.marching_cubes_lewiner(tsdf_vol, level=0)[0]
+    verts = measure.marching_cubes(tsdf_vol, level=0)[0]
     verts_ind = np.round(verts).astype(int)
     verts = verts*self._voxel_size + self._vol_origin
 
@@ -325,7 +327,7 @@ class TSDFVolume:
     tsdf_vol, color_vol = self.get_volume()
 
     # Marching cubes
-    verts, faces, norms, vals = measure.marching_cubes_lewiner(tsdf_vol, level=0)
+    verts, faces, norms, vals = measure.marching_cubes(tsdf_vol, level=0)
     verts_ind = np.round(verts).astype(int)
     verts = verts*self._voxel_size+self._vol_origin  # voxel grid coordinates to world coordinates
 
